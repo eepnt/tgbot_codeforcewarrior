@@ -4,8 +4,7 @@ from typing import Any, Optional
 from aiocache import cached
 from aiohttp import ClientSession
 
-from .models import Contest, ContestPhase, RatingChange, Submission, User
-from .utils import CodeforcesError
+from tgbot.codeforces.models import CodeforcesError, Contest, ContestPhase, RatingChange, Submission, User
 
 logger = logging.getLogger(__name__)
 
@@ -85,14 +84,6 @@ class AsyncCodeforcesAPI:
             contests = [c for c in contests if c.phase in phases]
         contests.sort(key=lambda c: c.startTimeSeconds)
         return contests
-
-    # @cached(ttl=30)
-    # async def get_standings(self, contest_id: int) -> list[RanklistRow]:
-    #     data = await self._request(
-    #         "contest.standings",
-    #         params={"contestId": contest_id, "showUnofficial": "false"}
-    #     )
-    #     return [RanklistRow(**r) for r in data["rows"]]
 
     @cached(ttl=60 * 60)
     async def get_rating_changes(self, contest_id: int) -> dict[str, RatingChange]:
